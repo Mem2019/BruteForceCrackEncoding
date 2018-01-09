@@ -161,9 +161,10 @@ void BruteForce::startCrack()
 		//init the progress the new possible chars
 		while (true)
 		{
-			if (traverseNext())
-				break;
+			bool ret = traverseNext();
 			doEncode();//must call testEncodeResult in some way
+			if (ret)
+				break;
 		}
 		//update the possible chars from new possible chars
 		size_t inputProgAdd = 0;
