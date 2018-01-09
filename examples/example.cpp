@@ -30,6 +30,8 @@ private:
 
 	virtual void doEncode() override
 	{
+	//this function must call getInput to get the input, encode it, 
+	//and call testEncodeResult with the result of encoding
 		hismain();
 	}
 public:
@@ -38,7 +40,7 @@ public:
 CrackCtf::~CrackCtf(){}
 
 CrackCtf crack(INPUT_LEN, (const bfbyte*)KEY, strlen(KEY));
-//±¾Ó¦¸ÃÊÇµ¥ÀıÄ£Ê½£¬µ«ÊÇCTF±ÈÈüµÄÊ±¼ä²»¿ÉÄÜ¸øÄãĞ´µ¥Àı
+//æœ¬åº”è¯¥æ˜¯å•ä¾‹æ¨¡å¼ï¼Œä½†æ˜¯CTFæ¯”èµ›çš„æ—¶é—´ä¸å¯èƒ½ç»™ä½ å†™å•ä¾‹
 
 size_t CrackCtf::myfwrite(char * str, size_t Size, size_t Count, FILE * File)
 {
@@ -71,7 +73,9 @@ DECLARE_EMPTY_FUNC(emptyfunc2, 4)
 int main()
 {
 	HMODULE pBase = LoadLibraryA("Encrypt messages.dll");
-
+	//Encrypt messages is an exe crack me in one CTF competition
+	//change the characteristic to dll, and set the entry address to 0, it can become a dll
+	
 	hookIAT(pBase, GETS_IAT, (func_p_t)&mygets);
 	hookIAT(pBase, FWRITE_IAT, (func_p_t)&CrackCtf::myfwrite);
 	hookIAT(pBase, SYSTEM_IAT, (func_p_t)&emptyfunc);
