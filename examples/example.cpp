@@ -13,6 +13,7 @@ typedef int (*main_t)();
 #define FOPEN_IAT 0x406C
 #define FCLOSE_IAT 0x4064
 #define COUT_IAT 0x4038
+#define OUTPUT_STR_E8ARG 0x1445
  
 #define KEY "Itl9qnxD/IJhoarL"
 
@@ -78,6 +79,8 @@ int main()
 	hookIAT(pBase, FOPEN_IAT, (func_p_t)&emptyfunc);
 	hookIAT(pBase, FCLOSE_IAT, (func_p_t)&emptyfunc);
 	hookIAT(pBase, COUT_IAT, (func_p_t)&emptyfunc2);
+
+	hookE8Call(pBase, OUTPUT_STR_E8ARG, (func_p_t)&emptyfunc);
 	
 	hismain = (main_t)((PBYTE)pBase + MAIN_DISPL);
 
