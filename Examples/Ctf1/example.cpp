@@ -61,15 +61,23 @@ int main()
 		MessageBoxA(NULL, "cannot open dll!", "error", MB_OK);
 		return -1;
 	}
-	hookIAT(pBase, GETS_IAT, (func_p_t)&mygets);
-	hookIAT(pBase, FWRITE_IAT, (func_p_t)&myfwrite);
-	hookIAT(pBase, SYSTEM_IAT, (func_p_t)&emptyfunc);
-	hookIAT(pBase, FOPEN_IAT, (func_p_t)&emptyfunc);
-	hookIAT(pBase, FCLOSE_IAT, (func_p_t)&emptyfunc);
-	hookIAT(pBase, COUT_IAT, (func_p_t)&emptyfunc2);
-	hookE8Call(pBase, OUTPUT_STR_E8ARG, (func_p_t)&emptyfunc);
-	//hook IAT 和 e8 call
-	hismain = (main_t)((PBYTE)pBase + MAIN_DISPL);
+	try
+	{
+		hookIAT(pBase, GETS_IAT, (func_p_t)&mygets);
+		hookIAT(pBase, FWRITE_IAT, (func_p_t)&myfwrite);
+		hookIAT(pBase, SYSTEM_IAT, (func_p_t)&emptyfunc);
+		hookIAT(pBase, FOPEN_IAT, (func_p_t)&emptyfunc);
+		hookIAT(pBase, FCLOSE_IAT, (func_p_t)&emptyfunc);
+		hookIAT(pBase, COUT_IAT, (func_p_t)&emptyfunc2);
+		hookE8Call(pBase, OUTPUT_STR_E8ARG, (func_p_t)&emptyfunc);
+		//hook IAT 和 e8 call
+		hismain = (main_t)((PBYTE)pBase + MAIN_DISPL);
+	}
+	catch (const HookException&)
+	{
+		MessageBoxA(NULL, "hook failed!", "error", MB_OK);
+		return -1;
+	}
 	//算出Main函数地址
 	crack.setDoEnc(hismain);
 	crack.startCrack();

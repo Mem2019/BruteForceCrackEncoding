@@ -6,9 +6,7 @@ typedef DWORD opcode_z_t;
 
 
 using namespace std;
-class HookException : public exception
-{
-};//todo
+
 func_p_t hookIAT(HMODULE module, size_t iatDisplacement, func_p_t newFunc)
 {
 	return hookIAT((func_p_t*)(((PBYTE)module) + iatDisplacement), newFunc);
