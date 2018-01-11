@@ -14,7 +14,8 @@ private:
 
 
 
-BruteForce::BruteForce(size_t inputLen, const bfbyte* answer, size_t answerLen)
+BruteForce::BruteForce(size_t inputLen, 
+	const bfbyte* answer, size_t answerLen, size_t blockSize)
 {
 	this->answerLen = answerLen;
 	
@@ -36,6 +37,7 @@ BruteForce::BruteForce(size_t inputLen, const bfbyte* answer, size_t answerLen)
 	this->newPossibleChars = new bool
 		[inputLen][NUM_OF_POSSIBLE_CHARS];
 
+	this->blockSize = blockSize;
 }
 
 BruteForce::~BruteForce()
@@ -127,13 +129,18 @@ bool BruteForce::testEncodeResult(const bfbyte * answer)
 
 	size_t prefLen = substrLen(answer);
 
-	if (prefLen > keyProg)
-	{//if the prefix length is new record, reset
+	if (prefLen >= keyProg + blockSize)
+	{
+		//if the prefix length reach the next block size, reset
 		resetNewPossibleChars();
-		keyProg = prefLen;
+		keyProg = prefLen / blockSize * blockSize;
+		//make keyProg to be the multiple of blockSize
 	}
-	else if (prefLen == keyProg)
-	{//if continues to be the same prefix length, record
+	else if (prefLen >= keyProg)
+	{
+		//if doesn't reach the new block, 
+		//but still reach the current progress, 
+		//we record
 		for (size_t i = 0; i < numOfNextByteToTrav; i++)
 		{
 			newPossibleChars[i][input[inputProg + i]] = true;
@@ -141,7 +148,9 @@ bool BruteForce::testEncodeResult(const bfbyte * answer)
  	}
  	else
  	{
-		//do nothing
+		//if doesn't reach current progress, 
+		//we don't recode
+		//int bp = 1; do nothing
  	}
 	return (prefLen >= answerLen);//return true if reach the destination
 }

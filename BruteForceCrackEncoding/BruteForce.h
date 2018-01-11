@@ -30,6 +30,8 @@ private:
 	bool (*newPossibleChars)[NUM_OF_POSSIBLE_CHARS];
 
 	size_t keyProg;
+
+	size_t blockSize;
 protected:
 	bool traverseNext();
 	virtual void doEncode() = 0;
@@ -37,7 +39,8 @@ protected:
 	//with encoded result of current input
 	//(obtained by getInput) in some way
 public:
-	BruteForce(size_t inputLen, const bfbyte* answer, size_t answerLen);
+	BruteForce(size_t inputLen, const bfbyte* answer, 
+		size_t answerLen, size_t blockSize);
 	virtual ~BruteForce();
 
 	void startCrack();
@@ -51,10 +54,10 @@ template<typename F>
 class CrackCtf : public BruteForce
 {
 public:
-	CrackCtf(size_t inputLen, const bfbyte* answer, size_t answerLen, F doEnc)
-		:BruteForce(inputLen, answer, answerLen), doEnc(doEnc) {}
-	CrackCtf(size_t inputLen, const bfbyte* answer, size_t answerLen)
-		:BruteForce(inputLen, answer, answerLen) {}
+	CrackCtf(size_t inputLen, const bfbyte* answer, size_t answerLen, 
+		F doEnc = nullptr, size_t blockSize = 1)
+		:BruteForce(inputLen, answer, answerLen, blockSize), 
+		doEnc(doEnc) {}
 	void setDoEnc(F func)
 	{
 		doEnc = func;
