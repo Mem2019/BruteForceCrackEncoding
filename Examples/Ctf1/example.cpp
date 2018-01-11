@@ -2,8 +2,8 @@
 #include <windows.h>
 #include <string.h>
 #include <vector>
-#include "BruteForce.h"
-#include "WindowsHookFramework.h"
+#include "Headers/BruteForce.h"
+#include "Headers/WindowsHookFramework.h"
 
 typedef int(*main_t)();
 #define GETS_IAT 0x40DC
