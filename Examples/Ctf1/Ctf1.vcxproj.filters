@@ -19,12 +19,4 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Headers\BruteForce.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WindowsHookFramework.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

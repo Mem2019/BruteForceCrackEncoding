@@ -46,3 +46,20 @@ public:
 	size_t getInput(bfbyte * dst);
 };
 
+
+template<typename F>
+class CrackCtf : public BruteForce
+{
+public:
+	CrackCtf(size_t inputLen, const bfbyte* answer, size_t answerLen, F doEnc)
+		:BruteForce(inputLen, answer, answerLen), doEnc(doEnc) {}
+	~CrackCtf() {};
+private:
+	F doEnc;
+	virtual void doEncode() override
+	{//继承重写doEncode函数，他必须要通过getInput获取到当前输入，然后把这个输入加密，再把加密结果作为参数调用testEncodeResult
+	 //this function must call getInput to get the input, encode it, 
+	 //and call testEncodeResult with the result of encoding
+		doEnc();//调用他的主函数，这个时候主函数已经被各种hook了
+	}
+};
