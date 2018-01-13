@@ -7,6 +7,7 @@ class BruteForce
 private:
 	size_t substrLen(const bfbyte* x);
 	void initPossibleChars();
+	void initPossibleChars(bfbyte* charset, size_t charsetLen);
 	void resetNewPossibleChars();
 
 	bfbyte* input;
@@ -40,7 +41,9 @@ protected:
 	//(obtained by getInput) in some way
 public:
 	BruteForce(size_t inputLen, const bfbyte* answer, 
-		size_t answerLen, size_t blockSize);
+		size_t answerLen, 
+		size_t blockSize = 1, 
+		bfbyte* charset = nullptr, size_t numOfChars = NUM_OF_POSSIBLE_CHARS);
 	virtual ~BruteForce();
 
 	void startCrack();

@@ -454,12 +454,13 @@ size_t aesEncrypt(uint8_t* input, size_t inputLen,
 	size_t mod =  inputLen % AES_BLOCK_SIZE;
 	size_t len = (mod == 0) ? inputLen : 
 		inputLen - mod + AES_BLOCK_SIZE;
-	if (outputLen < len)
+	//adjust the input buf len
+	if (outputLen < len)//buffer is not enough
 		return 0;
 	uint8_t* inputBuf = new uint8_t[len];
 	memset(inputBuf, 0, len * sizeof(uint8_t));
 	memcpy(inputBuf, input, inputLen);
-	uint8_t* w = new uint8_t[Nb*(14 + 1) * 4];
+	uint8_t* w = new uint8_t[Nb*(Nr + 1) * 4];
 	key_expansion(key, w);
 
 	for (size_t i = 0; i < len; i += AES_BLOCK_SIZE)
@@ -472,8 +473,8 @@ size_t aesEncrypt(uint8_t* input, size_t inputLen,
 	return len;
 }
 
-int main2(int argc, char *argv[]) {
-
+int mainTest(int argc, char *argv[]) {
+	//ugly codes, only for my test
 	uint8_t i;
 
 	/*
@@ -569,6 +570,14 @@ int main2(int argc, char *argv[]) {
 		0x00
 	};
 
+	uint8_t in4[] = {
+		0x00, 0x41, 0x41, 0x41,
+		0x00, 0x41, 0x00, 0x00,
+		0x41, 0x00, 0x41, 0x41,
+		0x00, 0x41, 0x41, 0x00,
+		0x00, 0x41, 0x00
+	};
+
 	uint8_t out[32]; // 128
 
 	uint8_t *w; // expanded key
@@ -609,6 +618,12 @@ int main2(int argc, char *argv[]) {
 		printf("%x %x %x %x ", out[4 * i + 0], out[4 * i + 1], out[4 * i + 2], out[4 * i + 3]);
 	}
 	printf("\n");
+
+	aesEncrypt(in4, 19, out, 32, key);
+	for (i = 0; i < 4; i++) {
+		printf("%x %x %x %x ", out[4 * i + 0], out[4 * i + 1], out[4 * i + 2], out[4 * i + 3]);
+	}
+
 	printf("\n");
 
 	exit(0);

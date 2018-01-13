@@ -15,7 +15,9 @@ private:
 
 
 BruteForce::BruteForce(size_t inputLen, 
-	const bfbyte* answer, size_t answerLen, size_t blockSize)
+	const bfbyte* answer, size_t answerLen, 
+	size_t blockSize,
+	bfbyte* charset, size_t charsetLen)
 {
 	this->answerLen = answerLen;
 	
@@ -30,7 +32,14 @@ BruteForce::BruteForce(size_t inputLen,
 	this->inputProg = 0;
 	this->keyProg = 0;
 	
-	initPossibleChars();
+	if (charset == nullptr)
+	{
+		initPossibleChars();
+	}
+	else
+	{
+		initPossibleChars(charset, charsetLen);
+	}
 	this->numOfNextByteToTrav = 1;
 
 	this->travProgresses = new size_t[inputLen];
@@ -109,6 +118,25 @@ void BruteForce::initPossibleChars()
 	for (size_t i = 0; i < inputLen; i++)
 	{
 		this->numOfPossibleChars[i] = NUM_OF_POSSIBLE_CHARS;
+	}
+}
+
+void BruteForce::initPossibleChars(bfbyte * charset, size_t charsetLen)
+{
+	this->possibleChars = new bfbyte
+		[inputLen][NUM_OF_POSSIBLE_CHARS];
+	for (size_t i = 0; i < inputLen; i++)
+	{
+		for (size_t c = 0; c < charsetLen && c < NUM_OF_POSSIBLE_CHARS; c++)
+		{
+			this->possibleChars[i][c] = charset[c];
+		}
+	}
+
+	this->numOfPossibleChars = new size_t[inputLen];
+	for (size_t i = 0; i < inputLen; i++)
+	{
+		this->numOfPossibleChars[i] = charsetLen;
 	}
 }
 

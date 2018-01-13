@@ -14,22 +14,23 @@ uint8_t key[] = {
 	0x1c, 0x1d, 0x1e, 0x1f };
 
 uint8_t res[] =
+{ 0x35,0x27,0xbd,0x7d,0x7f,0xfe,0x7e,0xdb,0xd2,0x7f,0xf9,0xc9,0x11,0x88,0x43,0x2a,
+0xcf,0xf1,0xf9,0x47,0xec,0xd4,0xf6,0x0e,0xf6,0xa6,0x2a,0x3c,0x3f,0x1c,0xba,0xe3 };
+
+void printHex(bfbyte* input, size_t inputLen)
 {
-	0x8e, 0xa2, 0xb7, 0xca, 
-	0x51, 0x67, 0x45, 0xbf, 
-	0xea, 0xfc, 0x49, 0x90, 
-	0x4b, 0x49, 0x60, 0x89,
-	0xf2, 0x90, 0x00, 0xb6, 
-	0x2a, 0x49, 0x9f, 0xd0, 
-	0xa9, 0xf3, 0x9a, 0x6a, 
-	0xdd, 0x2e, 0x77, 0x80
-};
+	for (size_t i = 0; i < inputLen; i++)
+	{
+		printf("%02x ", input[i]);
+	}
+	printf("\n");
+}
 
 class CrackAes : public BruteForce
 {
 public:
 	CrackAes(size_t inputLen, const bfbyte* answer, size_t answerLen)
-		:BruteForce(inputLen, answer, answerLen, AES_BLOCK_SIZE)
+		:BruteForce(inputLen, answer, answerLen, AES_BLOCK_SIZE, (bfbyte*)"A", 2)
 	{
 		this->outputBufLen = answerLen - answerLen % AES_BLOCK_SIZE + AES_BLOCK_SIZE;
 		this->inputBufLen = inputLen;
@@ -48,11 +49,7 @@ private:
 		size_t inputLen = getInput(input);
 		if (rand() % 4096 == 0)
 		{
-			for (size_t i = 0; i < inputLen; i++)
-			{
-				printf("%02x ", input[i]);
-			}
-			printf("\n");
+			printHex(input, inputLen);
 		}
 		if (!aesEncrypt(input, inputLen, output, outputBufLen, key))
 		{
@@ -60,7 +57,11 @@ private:
 			throw 0;
 #endif // DEBUG
 		}
-		this->testEncodeResult(output);
+		if (this->testEncodeResult(output))
+		{
+			printHex(input, inputLen);
+			system("pause");
+		}
 		delete[] output;
 		delete[] input;
 	}
@@ -69,6 +70,28 @@ private:
 
 int main()
 {
-	CrackAes aes(17, res, AES_BLOCK_SIZE * 2);
+	CrackAes aes(19, res, AES_BLOCK_SIZE * 2);
 	aes.startCrack();
+	/*
+output:
+41 00 00 00 41 41 41 41 00 00 41 41
+41 41 00 41 41 00 41 00 41 41 00 00 00
+41 41 41 00 41 41 00 41 41 41 00 00 41 41
+41 00 00 00 41 41 41 00 00 41 00 00 00 00
+00 00 00 41 00 41 00 41 00 41 41 41 00 00
+00 41 41 41 00 41 00 41 41 00 41 41 00 00 41
+41 41 00 00 00 00 00 00 41 00 41 00 41 00 41
+41 41 41 00 00 00 41 41 00 41 00 00 00 41 41
+00 41 00 00 41 00 00 41 00 41 00 00 41 00 00
+41 00 41 00 41 41 00 00 41 41 00 00 41 00 00
+00 41 00 00 00 00 00 41 00 41 00 00 00 41 00
+00 41 41 00 41 00 41 41 41 00 41 00 00 41 00
+41 00 41 00 41 41 41 00 00 00 41 41 00 41 00
+41 00 00 41 41 41 41 41 00 00 41 41 41 41 00
+00 41 41 41 00 41 00 00 41 00 41 41 00 41 41 00 00 41
+请按任意键继续. . .
+00 41 41 41 00 41 00 00 41 00 41 41 00 41 41 00 00 41 00
+请按任意键继续. . .
+	*/
+	return 0;
 }
