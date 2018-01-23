@@ -23,7 +23,7 @@ main_t hismain;
 
 
 
-CrackCtf<main_t> crack(INPUT_LEN, (const bfbyte*)KEY, strlen(KEY), nullptr, 3);
+CrackCtf<main_t> crack(INPUT_LEN, (const bfbyte*)KEY, strlen(KEY), nullptr);
 //本应该是单例模式，但是CTF比赛的时间不可能给你写单例
 //第一个参数是所需要破解的最大长度，这个我是自己试出来的（看多长的输入才能跟要求的答案一样长并且没有等于号（因为这是魔改base64）。。。
 //后面两个参数是密文和密文的长度

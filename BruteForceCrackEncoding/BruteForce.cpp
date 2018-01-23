@@ -7,7 +7,7 @@ class BruteForceException : public exception
 {
 public:
 	BruteForceException(const char* info)
-	: info(info){}//fucking todo
+	: info(info){}//todo
 private:
 	const char* info;
 };
@@ -30,7 +30,7 @@ BruteForce::BruteForce(size_t inputLen,
 	memset(this->input, 0, sizeof(bfbyte) * (inputLen + 1));
 	
 	this->inputProg = 0;
-	this->keyProg = 0;
+	this->lockedPrefixNum = 0;
 	
 	if (charset == nullptr)
 	{
@@ -47,6 +47,8 @@ BruteForce::BruteForce(size_t inputLen,
 		[inputLen][NUM_OF_POSSIBLE_CHARS];
 
 	this->blockSize = blockSize;
+
+	this->lockedProgForEachInput = new size_t[inputLen];
 }
 
 BruteForce::~BruteForce()
@@ -59,6 +61,8 @@ BruteForce::~BruteForce()
 
 	delete[] this->travProgresses;
 	delete[] this->newPossibleChars;
+
+	delete[] this->lockedProgForEachInput;
 }
 
 bool BruteForce::traverseNext()
@@ -157,14 +161,14 @@ bool BruteForce::testEncodeResult(const bfbyte * answer)
 
 	size_t prefLen = substrLen(answer);
 
-	if (prefLen >= keyProg + blockSize)
+	if (prefLen >= lockedPrefixNum + blockSize)
 	{
 		//if the prefix length reach the next block size, reset
 		resetNewPossibleChars();
-		keyProg = prefLen / blockSize * blockSize;
+		lockedPrefixNum = prefLen / blockSize * blockSize;
 		//make keyProg to be the multiple of blockSize
 	}
-	else if (prefLen >= keyProg)
+	else if (prefLen >= lockedPrefixNum)
 	{
 		//if doesn't reach the new block, 
 		//but still reach the current progress, 
@@ -177,8 +181,14 @@ bool BruteForce::testEncodeResult(const bfbyte * answer)
  	else
  	{
 		//if doesn't reach current progress, 
-		//we don't recode
-		//int bp = 1; do nothing
+		//we don't record
+		//However, if prefLen retrogrades, throw exception!
+		//This is not accurate, still..
+		if (inputProg > 0 && prefLen < lockedProgForEachInput[inputProg - 1])
+		{
+			int asd = 0;
+			//throw BruteForceException("The block size may be wrong!");
+		}
  	}
 	return (prefLen >= answerLen);//return true if reach the destination
 }
@@ -204,7 +214,6 @@ void BruteForce::startCrack()
 				break;
 		}
 		//update the possible chars from new possible chars
-		size_t inputProgAdd = 0;
 		size_t numOfNewFixBytes = 0;
 		bool isStillSingle = true;
 		for (size_t i = 0; i < numOfNextByteToTrav; i++)
@@ -224,15 +233,30 @@ void BruteForce::startCrack()
 			}
 			if (numOfPossibleChars[inputProg + i] == 0)
 			{
-				throw BruteForceException("we don't support blocked algorithm yet");
+				//this detection is not accurate.
+				//since it is possible for 
+				//the next byte to reach the previous progress,
+				//but actually with combination of these byte into one block
+				//the progress can be even higher
+				//e.g. Zctf20171, encode in block of 2 bytes
+				//will stuck in first two bytes, with keyProgress 1
+				//since these two bytes are guessed wrong
+				//actually the progress can be 2 
+				//if we traverse all of 65536 cases
+				throw BruteForceException("The block size may be wrong!");
 			}
 			else if (numOfPossibleChars[inputProg + i] == 1)
 			{
 				if (isStillSingle)
 				{//if continues to be single, increase the progress
 					input[inputProg + i] = lastChar;
-					inputProgAdd++;
 					numOfNewFixBytes++;
+					lockedProgForEachInput[inputProg + i]
+						= lockedPrefixNum;
+					if (lockedPrefixNum == 0x0A)//debug
+					{
+						int asd = 0;
+					}
 				}
 			}
 			else
@@ -240,7 +264,7 @@ void BruteForce::startCrack()
 				isStillSingle = false;
 			}
 		}
-		inputProg += inputProgAdd;
+		inputProg += numOfNewFixBytes;
 		numOfNextByteToTrav -= numOfNewFixBytes;
 		numOfNextByteToTrav++;//traverse next byte
 		if (numOfNextByteToTrav + inputProg > inputLen)

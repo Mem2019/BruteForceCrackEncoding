@@ -30,8 +30,9 @@ private:
 	//the new possible chars to record, with the length of numOfNextByteToTrav
 	bool (*newPossibleChars)[NUM_OF_POSSIBLE_CHARS];
 
-	size_t keyProg;
-
+	//progress to record number of common prefix currently
+	size_t lockedPrefixNum;
+	size_t* lockedProgForEachInput;
 	size_t blockSize;
 protected:
 	bool traverseNext();
@@ -58,8 +59,9 @@ class CrackCtf : public BruteForce
 {
 public:
 	CrackCtf(size_t inputLen, const bfbyte* answer, size_t answerLen, 
-		F doEnc = nullptr, size_t blockSize = 1)
-		:BruteForce(inputLen, answer, answerLen, blockSize), 
+		F doEnc = nullptr, size_t blockSize = 1, 
+		bfbyte* charset = nullptr, size_t numOfChars = NUM_OF_POSSIBLE_CHARS)
+		:BruteForce(inputLen, answer, answerLen, blockSize, charset, numOfChars),
 		doEnc(doEnc) {}
 	void setDoEnc(F func)
 	{
