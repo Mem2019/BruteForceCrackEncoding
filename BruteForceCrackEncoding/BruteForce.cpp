@@ -186,7 +186,10 @@ bool BruteForce::testEncodeResult(const bfbyte * answer)
 		//This is not accurate, still..
 		if (inputProg > 0 && prefLen < lockedProgForEachInput[inputProg - 1])
 		{
-			int asd = 0;
+			cerr << "The block size may be wrong!" << endl;
+			//give the warning instead of throwing an exception
+			//since it may judge incorrectly...
+			//todo: adjust block size automatically
 			//throw BruteForceException("The block size may be wrong!");
 		}
  	}

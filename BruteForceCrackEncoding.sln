@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AesCracking", "Examples\Aes
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Zctf20171", "Examples\Zctf20171\Zctf20171.vcxproj", "{B1410E29-6A43-4A6D-985E-E42A904255A4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Template", "Template\Template.vcxproj", "{C81A047A-796C-4852-A737-B29DB2478659}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{B1410E29-6A43-4A6D-985E-E42A904255A4}.Release|x64.Build.0 = Release|x64
 		{B1410E29-6A43-4A6D-985E-E42A904255A4}.Release|x86.ActiveCfg = Release|Win32
 		{B1410E29-6A43-4A6D-985E-E42A904255A4}.Release|x86.Build.0 = Release|Win32
+		{C81A047A-796C-4852-A737-B29DB2478659}.Debug|x64.ActiveCfg = Debug|x64
+		{C81A047A-796C-4852-A737-B29DB2478659}.Debug|x64.Build.0 = Debug|x64
+		{C81A047A-796C-4852-A737-B29DB2478659}.Debug|x86.ActiveCfg = Debug|Win32
+		{C81A047A-796C-4852-A737-B29DB2478659}.Debug|x86.Build.0 = Debug|Win32
+		{C81A047A-796C-4852-A737-B29DB2478659}.Release|x64.ActiveCfg = Release|x64
+		{C81A047A-796C-4852-A737-B29DB2478659}.Release|x64.Build.0 = Release|x64
+		{C81A047A-796C-4852-A737-B29DB2478659}.Release|x86.ActiveCfg = Release|Win32
+		{C81A047A-796C-4852-A737-B29DB2478659}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
